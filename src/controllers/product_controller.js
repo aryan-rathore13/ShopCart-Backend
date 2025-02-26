@@ -1,26 +1,49 @@
 const {StatusCodes,ReasonPhrases} = require('http-status-codes');
-function createProduct(request,response){
+const {createProduct,getProducts,getProduct} = require('../services/product_service');
+function createProductHandler(req,res){
     try {
-        return response.status(StatusCodes.CREATED).json({
+        const response=createProduct(req.body);
+        return res.status(StatusCodes.CREATED).json({
             success:true,
             error:{},
             message:ReasonPhrases.CREATED,
-            data:{
-                id:Math.random() * 20,
-                title:request.body.title,
-                price:request.body.price,
-                description:request.body.description,
-                image:request.body.image,
-                category:request.body.category
-            }
+            data:response
+        });
 
-        })
-
+    } catch (error) {
+        console.log("Something went wrong",error);
+    }
+}
+async function getProductsHandler(req,res){
+    try {
+        const response=await getProducts();
+        console.log(response.data);
+        return res.status(StatusCodes.OK).json({
+            success:true,
+            error:{},
+            message:"Success",
+            data:response.data
+        });
+    } catch (error) {
+        console.log("Something went wrong",error);
+    }
+}
+function getProductHandler(req,res){
+    try {
+        const response=getProduct(req.params.id);
+        return res.status(StatusCodes.OK).json({
+            success:true,
+            error:{},
+            message:"Successfully fetched",
+            data:response
+        });
     } catch (error) {
         console.log("Something went wrong",error);
     }
 }
 
 module.exports={
-    createProduct
+    createProduct: createProductHandler,
+    getProducts: getProductsHandler,
+    getProduct: getProductHandler
 }
