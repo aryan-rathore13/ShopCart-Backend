@@ -8,22 +8,19 @@ class ProductService{
         this.repository=repository;
     }
     
-    createProduct(product){
-        const newProduct={
-            id:products.length,
-            ...product
-        };
-        products.push(newProduct);
-        return newProduct;
+    async createProduct(product){
+        const response= await this.repository.createProduct(product);
+        return response;
     }
     
     async getProducts(){
         const response=await this.repository.getProducts();
-        return response.data;
+        return response;
     }
     
-    getProduct(id){
-        return products.filter(product=>product.id==id)[0];
+    async getProduct(id){
+        const response=await this.repository.getProduct(id);
+        return response;
     }
 }
 

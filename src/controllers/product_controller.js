@@ -4,15 +4,17 @@ const ProductService = require('../services/product_service');
 
 const productService=new ProductService(new FakeStoreRepository());
 
-function createProduct(req,res){
+async function createProduct(req,res){
     try {
-        const response=productService.createProduct(req.body);
+        const response=await productService.createProduct(req.body);
+        
         return res.status(StatusCodes.CREATED).json({
             success:true,
             error:{},
             message:ReasonPhrases.CREATED,
             data:response
         });
+        
 
     } catch (error) {
         console.log("Something went wrong",error);
@@ -32,14 +34,14 @@ async function getProducts(req,res){
         console.log("Something went wrong",error);
     }
 }
-function getProduct(req,res){
+async function getProduct(req,res){
     try {
-        const response=productService.getProduct(req.params.id);
+        const response= await productService.getProduct(req.params.id);
         return res.status(StatusCodes.OK).json({
             success:true,
             error:{},
             message:"Successfully fetched",
-            data:response.data
+            data:response
         });
     } catch (error) {
         console.log("Something went wrong",error);
