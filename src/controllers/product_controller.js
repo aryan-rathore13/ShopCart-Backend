@@ -1,8 +1,12 @@
 const {StatusCodes,ReasonPhrases} = require('http-status-codes');
-const {createProduct,getProducts,getProduct} = require('../services/product_service');
-function createProductHandler(req,res){
+const FakeStoreRepository = require('../repositories/fake_store_repository');
+const ProductService = require('../services/product_service');
+
+const productService=new ProductService(new FakeStoreRepository());
+
+function createProduct(req,res){
     try {
-        const response=createProduct(req.body);
+        const response=productService.createProduct(req.body);
         return res.status(StatusCodes.CREATED).json({
             success:true,
             error:{},
@@ -14,28 +18,28 @@ function createProductHandler(req,res){
         console.log("Something went wrong",error);
     }
 }
-async function getProductsHandler(req,res){
+async function getProducts(req,res){
     try {
-        const response=await getProducts();
-        console.log(response.data);
+        const response=await productService.getProducts();
+        
         return res.status(StatusCodes.OK).json({
             success:true,
             error:{},
             message:"Success",
-            data:response.data
+            data:response
         });
     } catch (error) {
         console.log("Something went wrong",error);
     }
 }
-function getProductHandler(req,res){
+function getProduct(req,res){
     try {
-        const response=getProduct(req.params.id);
+        const response=productService.getProduct(req.params.id);
         return res.status(StatusCodes.OK).json({
             success:true,
             error:{},
             message:"Successfully fetched",
-            data:response
+            data:response.data
         });
     } catch (error) {
         console.log("Something went wrong",error);
@@ -43,7 +47,7 @@ function getProductHandler(req,res){
 }
 
 module.exports={
-    createProduct: createProductHandler,
-    getProducts: getProductsHandler,
-    getProduct: getProductHandler
+    createProduct,
+    getProducts,
+    getProduct
 }
