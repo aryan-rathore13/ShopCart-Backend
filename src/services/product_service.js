@@ -1,7 +1,3 @@
-//in memory DB
-const products=[];
-
-
 
 class ProductService{
     constructor(repository){
